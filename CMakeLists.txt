@@ -8,8 +8,12 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_P
 #
 # Make a version file containing the current version from git.
 #
-include(GetGitRevisionDescription)
-git_describe(VERSION --tags --dirty=-dirty)
+if(EXISTS "${PROJECT_SOURCE_DIR}/versionForSourcePackage.cmake")
+  include("${PROJECT_SOURCE_DIR}/versionForSourcePackage.cmake")
+else()
+  include(GetGitRevisionDescription)
+  git_describe(VERSION --tags --dirty=-dirty)
+endif()
 
 #parse the version information into pieces.
 string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
@@ -18,8 +22,24 @@ string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VER
 string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
 set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
+# The following will transfer the version from git to the source package.
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION_SHORT}-Source")
+set(CPACK_INSTALL_COMMANDS "${CMAKE_SOURCE_DIR}/versionNumberToPackage.sh ${PROJECT_BINARY_DIR}/versionForSourcePackage.cmake \
+    ${PROJECT_BINARY_DIR}/_CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}/versionForSourcePackage.cmake")
+# Exclude the build and .git directory from the source package.
+set(CPACK_SOURCE_IGNORE_FILES "${PROJECT_SOURCE_DIR}/.git/;${PROJECT_BINARY_DIR}/;${CPACK_SOURCE_IGNORE_FILES}")
+
+include (CPack)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+configure_file(
+   ${PROJECT_SOURCE_DIR}/versionForSourcePackage.cmake.in
+   ${PROJECT_BINARY_DIR}/versionForSourcePackage.cmake @ONLY)
 set(version_file "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
 set(source_files "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
