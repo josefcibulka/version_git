@@ -1,3 +1,9 @@
 #!/bin/bash
-cp $1 $2
-RC=$? # hide the potential failure of the "cp" command
+if [ -z "$1" ] || [ -z "$2" ]; then
+   exit 0
+fi
+for i in "$2"/*/*/*;do
+   if [ -d "$i" ];then
+      cp $1 $i
+   fi
+done

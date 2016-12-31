@@ -28,8 +28,13 @@ set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 # The following will transfer the version from git to the source package.
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION_SHORT}-Source")
-set(CPACK_INSTALL_COMMANDS "${CMAKE_SOURCE_DIR}/versionNumberToPackage.sh ${PROJECT_BINARY_DIR}/versionForSourcePackage.cmake \
-    ${PROJECT_BINARY_DIR}/_CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}/versionForSourcePackage.cmake")
+#set(CPACK_INSTALL_COMMANDS "${CMAKE_SOURCE_DIR}/versionNumberToPackage.sh ${PROJECT_BINARY_DIR}/versionForSourcePackage.cmake \
+#    ${PROJECT_BINARY_DIR}/_CPack_Packages/")
+set(CPACK_INSTALL_COMMANDS "${CMAKE_COMMAND} -E make_directory \
+    ${PROJECT_BINARY_DIR}/_CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}/"
+    "${CMAKE_COMMAND} -E copy \
+    ${PROJECT_BINARY_DIR}/versionForSourcePackage.cmake \
+    ${PROJECT_BINARY_DIR}/_CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}/")
 # Exclude the build and .git directory from the source package.
 set(CPACK_SOURCE_IGNORE_FILES "${PROJECT_SOURCE_DIR}/.git/;${PROJECT_BINARY_DIR}/;${CPACK_SOURCE_IGNORE_FILES}")
 
