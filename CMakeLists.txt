@@ -27,7 +27,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 # The following will transfer the version from git to the source package.
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION_SHORT}-Source")
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${PROJECT_SOURCE_DIR};/;${PROJECT_BINARY_DIR}/version_file;/")
 # Exclude the build and .git directory from the source package.
 set(CPACK_SOURCE_IGNORE_FILES "${PROJECT_SOURCE_DIR}/.git/;${PROJECT_BINARY_DIR}/([^v].*|v[^e].*|ve[^r].*|ver[^s].*|vers[^i].*|vers[^i].*|versi[^o].*|versio[^n].*|version[^_].*|version_[^f].*|version_f[^i].*|version_fi[^l].*|version_fil[^e].*);${CPACK_SOURCE_IGNORE_FILES}")
