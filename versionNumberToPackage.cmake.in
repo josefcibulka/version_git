@@ -1,0 +1,5 @@
+# Copies VersionForSourcePackage.cmake to the source package (it should not be copied to binary package).
+# Detection if this is the source package is that the path ends with "Source" and an optional slash.
+if("${CMAKE_CURRENT_BINARY_DIR}" MATCHES "Source/?$")
+   file(COPY @CMAKE_BINARY_DIR@/versionForSourcePackage.cmake DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+endif()
